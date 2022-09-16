@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1-Create-tables" author="Anastasiia Sashina">
+        <sqlFile path="init/create-movie-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="init/create-role-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="init/create-screen-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="init/create-seat-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="init/create-session-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="init/create-user_info-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="init/create-ticket-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="init/create-user_role-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+</databaseChangeLog>
