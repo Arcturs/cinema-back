@@ -23,6 +23,9 @@ public class MovieEntity {
     private Long movieId;
 
     @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
     private LocalTime duration;
 
     @Column(nullable = false)

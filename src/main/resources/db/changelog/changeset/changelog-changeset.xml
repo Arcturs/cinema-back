@@ -16,4 +16,12 @@
         <sqlFile path="init/create-user_role-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="2-Create-poster-table" author="Anastasiia Sashina">
+        <sqlFile path="init/create-poster-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="3-Alter-movie-table.sql" author="Anastasiia Sashina">
+        <sqlFile path="alter/add-description-field.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
