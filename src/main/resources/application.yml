@@ -13,4 +13,8 @@ spring:
 poster:
   directory: c/Users/Public/posters
 
+screen:
+  maxScreenNumber: 16
 
+session:
+  maxFreshDays: 3

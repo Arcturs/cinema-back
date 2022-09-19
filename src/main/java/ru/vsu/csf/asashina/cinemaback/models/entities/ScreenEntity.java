@@ -21,7 +21,7 @@ public class ScreenEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long screenId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Integer screenNumber;
 
     @Column(nullable = false)

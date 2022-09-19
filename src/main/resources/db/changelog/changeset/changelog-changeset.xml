@@ -24,4 +24,8 @@
         <sqlFile path="alter/add-description-field.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="4-Alter-screen-table.sql" author="Anastasiia Sashina">
+        <sqlFile path="alter/add-unique_constraint-screen.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @Setter
 public class MoviePageDTO {
 
+    private Long movieId;
     private LocalTime duration;
     private String title;
     private Double rating;

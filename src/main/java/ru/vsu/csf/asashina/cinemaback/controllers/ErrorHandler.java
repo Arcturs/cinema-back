@@ -3,19 +3,14 @@ package ru.vsu.csf.asashina.cinemaback.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.vsu.csf.asashina.cinemaback.exceptions.BaseException;
-import ru.vsu.csf.asashina.cinemaback.exceptions.ObjectNotExistsException;
-import ru.vsu.csf.asashina.cinemaback.exceptions.PosterException;
-import ru.vsu.csf.asashina.cinemaback.exceptions.SessionsExistForMovieException;
+import ru.vsu.csf.asashina.cinemaback.exceptions.*;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
@@ -54,8 +49,13 @@ public class ErrorHandler {
                         )));
     }
 
-    @ExceptionHandler(SessionsExistForMovieException.class)
+    @ExceptionHandler(SessionsExistException.class)
     public ResponseEntity<?> conflictErrorHandler(BaseException e) {
         return ResponseBuilder.build(CONFLICT, e.getMessage());
+    }
+
+    @ExceptionHandler(MaxScreenNumberException.class)
+    public ResponseEntity<?> methodNotAllowedErrorHandler(BaseException e) {
+        return ResponseBuilder.build(METHOD_NOT_ALLOWED, e.getMessage());
     }
 }

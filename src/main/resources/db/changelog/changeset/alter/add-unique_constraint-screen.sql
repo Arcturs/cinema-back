@@ -1,0 +1,1 @@
+ALTER TABLE screen ADD CONSTRAINT screen_number_constraint UNIQUE (screen_number);

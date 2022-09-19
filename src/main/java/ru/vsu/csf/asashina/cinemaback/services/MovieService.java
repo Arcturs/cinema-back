@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.vsu.csf.asashina.cinemaback.exceptions.ObjectNotExistsException;
 import ru.vsu.csf.asashina.cinemaback.exceptions.PosterException;
-import ru.vsu.csf.asashina.cinemaback.exceptions.SessionsExistForMovieException;
+import ru.vsu.csf.asashina.cinemaback.exceptions.SessionsExistException;
 import ru.vsu.csf.asashina.cinemaback.mappers.MovieMapper;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.movie.MovieDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.movie.MoviePageDTO;
@@ -83,7 +83,7 @@ public class MovieService {
     public MovieDTO updateMovie(MovieRequest request, Long movieId) throws IOException {
         MovieEntity entity = findMovieById(movieId);
         if (entity.getSessions() != null || !entity.getSessions().isEmpty()) {
-            throw new SessionsExistForMovieException("Can not update movie due to existing sessions");
+            throw new SessionsExistException("Can not update movie due to existing sessions");
         }
 
         var multipartFile = request.getPoster();
