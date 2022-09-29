@@ -99,6 +99,12 @@ public class MovieService {
         return movieDTO;
     }
 
+    public MovieEntity findMovieById(Long movieId) {
+        return movieRepository.findById(movieId).orElseThrow(
+                () -> new ObjectNotExistsException("Movie with following id does not exist")
+        );
+    }
+
     private Sort getSort(MovieSortEnum sort, Boolean isAsc) {
         Sort pageSort = switch (sort) {
             case BY_TITLE -> Sort.by("title");
@@ -131,11 +137,5 @@ public class MovieService {
         if (image.getHeight() < 490 || image.getWidth() < 350) {
             throw new PosterException("Size proportions should be at least H:490 and W:350");
         }
-    }
-
-    private MovieEntity findMovieById(Long movieId) {
-        return movieRepository.findById(movieId).orElseThrow(
-                () -> new ObjectNotExistsException("Movie with following id does not exist")
-        );
     }
 }

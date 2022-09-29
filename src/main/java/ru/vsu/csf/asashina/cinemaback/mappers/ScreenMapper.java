@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-import ru.vsu.csf.asashina.cinemaback.models.SessionDTO;
+import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.SeatDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.screen.ScreenDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.screen.ScreenPageDTO;
@@ -30,7 +30,7 @@ public interface ScreenMapper {
 
     Set<SeatDTO> seatDTOMapping(Set<SeatEntity> set);
 
-    Set<SessionDTO> sessionDTOMapping(Set<SessionEntity> set);
+    Set<SessionPageDTO> sessionDTOMapping(Set<SessionEntity> set);
 
     ScreenEntity fromRequestToEntity(ScreenRequest request, Integer screenNumber);
 }

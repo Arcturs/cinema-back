@@ -32,7 +32,4 @@ public class ScreenEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, mappedBy = "screen")
     private Set<SeatEntity> seatsSet = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, mappedBy = "screen")
-    private Set<SessionEntity> sessions = new HashSet<>();
 }

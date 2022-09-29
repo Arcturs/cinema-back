@@ -9,9 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SeatDTO {
+public class SeatPlanDTO {
 
-    private Long seatId;
-    private Integer row;
-    private Integer seatNumber;
+    private Long seatPlanForSessionId;
+    private SeatDTO seat;
+    private Boolean isAvailable = true;
 }

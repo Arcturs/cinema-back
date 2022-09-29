@@ -49,7 +49,7 @@ public class ErrorHandler {
                         )));
     }
 
-    @ExceptionHandler(SessionsExistException.class)
+    @ExceptionHandler({SessionsExistException.class, SessionDateTimeException.class})
     public ResponseEntity<?> conflictErrorHandler(BaseException e) {
         return ResponseBuilder.build(CONFLICT, e.getMessage());
     }

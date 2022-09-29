@@ -18,3 +18,4 @@ screen:
 
 session:
   maxFreshDays: 3
+  cleaningTimeInMinutes: 30

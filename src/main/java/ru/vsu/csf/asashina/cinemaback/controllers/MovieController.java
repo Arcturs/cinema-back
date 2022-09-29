@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.vsu.csf.asashina.cinemaback.models.SessionDTO;
+import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.PagingDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.movie.MoviePageDTO;
 import ru.vsu.csf.asashina.cinemaback.models.enumerations.MovieSortEnum;
@@ -60,7 +60,7 @@ public class MovieController {
             @PathVariable("id") Long movieId,
             @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
             @RequestParam(value = "size", required = false, defaultValue = "5") Integer size) {
-        Page<SessionDTO> pages = sessionService.getAllFreshSessionsByMovieId(movieId, pageNumber, size);
+        Page<SessionPageDTO> pages = sessionService.getAllFreshSessionsByMovieId(movieId, pageNumber, size);
         return ResponseBuilder.build(new PagingDTO(pageNumber, size, pages.getTotalPages()),
                 pages.getContent());
     }

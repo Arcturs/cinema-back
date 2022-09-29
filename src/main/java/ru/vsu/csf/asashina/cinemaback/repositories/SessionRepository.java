@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ru.vsu.csf.asashina.cinemaback.models.entities.ScreenEntity;
 import ru.vsu.csf.asashina.cinemaback.models.entities.SessionEntity;
 
 import java.time.Instant;
+import java.util.List;
 
 @Repository
 public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
@@ -32,4 +34,8 @@ public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
                                          @Param("dateFresh") Instant dateFresh,
                                          @Param("movieId") Long movieId,
                                          Pageable pageable);
+
+    List<SessionEntity> findByScreenAndAndStartTimeAfterAndAndEndTimeBeforeOrOrderByStartTime(ScreenEntity screen,
+                                                                            Instant startTime,
+                                                                            Instant endTime);
 }

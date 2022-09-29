@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "session")
@@ -36,4 +38,7 @@ public class SessionEntity {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "movie_id")
     private MovieEntity movie;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "session")
+    private Set<SeatPlanEntity> seatPlan = new HashSet<>();
 }

@@ -40,10 +40,4 @@ public class ScreenController {
         screenService.createScreen(request);
         return ResponseEntity.status(CREATED).build();
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteScreen(@PathVariable("id") Long screenId) {
-        screenService.deleteScreen(screenId);
-        return ResponseEntity.noContent().build();
-    }
 }

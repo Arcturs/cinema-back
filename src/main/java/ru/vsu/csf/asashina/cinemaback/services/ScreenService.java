@@ -37,10 +37,14 @@ public class ScreenService {
     }
 
     public ScreenDTO getScreenById(Long screenId) {
-        ScreenEntity entity = screenRepository.findById(screenId).orElseThrow(
+        ScreenEntity entity = getEntityById(screenId);
+        return screenMapper.toDTOFromEntity(entity);
+    }
+
+    public ScreenEntity getEntityById(Long screenId) {
+        return screenRepository.findById(screenId).orElseThrow(
                 () -> new ObjectNotExistsException("Screen with following ID does not exist")
         );
-        return screenMapper.toDTOFromEntity(entity);
     }
 
     @Transactional
@@ -51,14 +55,5 @@ public class ScreenService {
         }
         ScreenEntity entity = screenRepository.save(screenMapper.fromRequestToEntity(request, (int) lastScreenNumber));
         seatService.createSeats(entity);
-    }
-
-    @Transactional
-    public void deleteScreen(Long screenId) {
-        ScreenDTO screen = getScreenById(screenId);
-        if (screen.getSessions() != null && !screen.getSessions().isEmpty()) {
-            throw new SessionsExistException("Cannot delete screen due to existing sessions");
-        }
-        screenRepository.deleteById(screenId);
     }
 }

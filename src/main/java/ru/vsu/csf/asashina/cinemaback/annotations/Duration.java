@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Duration {
 
-    String message() default "Invalid time format (HH:MM or H:MM or in minutes))";
+    String message() default "Duration must be between 0:00 and 7:00";
 
     Class<?>[] groups() default {};
 
