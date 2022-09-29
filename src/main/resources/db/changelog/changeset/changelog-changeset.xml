@@ -16,4 +16,20 @@
         <sqlFile path="init/create-user_role-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="2-Create-poster-table" author="Anastasiia Sashina">
+        <sqlFile path="init/create-poster-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="3-Alter-movie-table.sql" author="Anastasiia Sashina">
+        <sqlFile path="alter/add-description-field.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="4-Alter-screen-table.sql" author="Anastasiia Sashina">
+        <sqlFile path="alter/add-unique_constraint-screen.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="5-Create-seat_plan_for_session-table.sql" author="Anastasiia Sashina">
+        <sqlFile path="init/create-seat_plan_for_session-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>

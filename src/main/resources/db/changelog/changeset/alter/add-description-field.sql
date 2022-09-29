@@ -1,0 +1,5 @@
+ALTER TABLE movie
+ADD COLUMN IF NOT EXISTS description TEXT;
+
+ALTER TABLE movie
+ALTER COLUMN description SET NOT NULL;
