@@ -53,7 +53,8 @@ public class ScreenService {
         if (lastScreenNumber + 1 == maxScreenNumber) {
             throw new MaxScreenNumberException("Max screen number reached");
         }
-        ScreenEntity entity = screenRepository.save(screenMapper.fromRequestToEntity(request, (int) lastScreenNumber));
+        ScreenEntity entity = screenRepository.save(screenMapper.fromRequestToEntity(request,
+                (int) lastScreenNumber + 1));
         seatService.createSeats(entity);
     }
 }
