@@ -38,8 +38,8 @@ public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
             SELECT *
             FROM session
             WHERE screen_id = :screenId
-              AND start_time > :startTime
-              AND end_time < :endTime
+              AND (start_time >= :startTime
+              OR end_time <= :endTime)
             ORDER BY start_time""", nativeQuery = true)
     List<SessionEntity> findByScreenIdAndAndStartTimeAfterAndAndEndTimeBeforeOrOrderByStartTime(Long screenId,
                                                                                                 Instant startTime,

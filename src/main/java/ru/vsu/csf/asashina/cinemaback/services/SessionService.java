@@ -42,7 +42,7 @@ public class SessionService {
     public Page<SessionPageDTO> getAllFreshSessions(Integer pageNumber, Integer size) {
         Instant dateNow = Instant.now(clock);
         Instant dateFuture = dateNow.plusSeconds(fromDaysToSeconds(maxDaysToShow));
-        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("start_time").and(Sort.by("end_ time")));
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("start_time").and(Sort.by("end_time")));
         Page<SessionEntity> pages = sessionRepository.getFreshSessions(dateNow, dateFuture, pageable);
         return pages.map(sessionMapper::toPageDTOFromEntity);
     }
@@ -67,7 +67,7 @@ public class SessionService {
         MovieEntity movie = movieService.findMovieById(request.getMovieId());
         ScreenEntity screen = screenService.getEntityById(request.getScreenId());
         Instant start = LocalDateTime.of(request.getStartDate(), request.getStartTime())
-                .toInstant((ZoneOffset) clock.getZone());
+                .toInstant(clock.getZone().getRules().getOffset(Instant.now()));
         validateStartDateAndStartTime(null, start, movie.getDuration(), screen);
         SessionEntity entity = sessionRepository.save(sessionMapper.fromRequestToEntity(request, start,
                 getFinishDateTime(start, movie.getDuration()), movie, screen));
@@ -82,7 +82,7 @@ public class SessionService {
         MovieEntity movie = movieService.findMovieById(request.getMovieId());
         ScreenEntity screen = screenService.getEntityById(request.getScreenId());
         Instant start = LocalDateTime.of(request.getStartDate(), request.getStartTime())
-                .toInstant((ZoneOffset) clock.getZone());
+                .toInstant(clock.getZone().getRules().getOffset(Instant.now()));
         validateStartDateAndStartTime(sessionId, start, movie.getDuration(), screen);
         sessionMapper.updateSessionEntity(session, request, start,
                 getFinishDateTime(start, movie.getDuration()), movie, screen);
@@ -117,15 +117,18 @@ public class SessionService {
         Instant finish = getFinishDateTime(start, duration);
         List<SessionEntity> sessions =
                 sessionRepository.findByScreenIdAndAndStartTimeAfterAndAndEndTimeBeforeOrOrderByStartTime(
-                        screen.getScreenId(), now, nowPlusOneDay.plusSeconds(fromDaysToSeconds(1)));
+                        screen.getScreenId(), start.minusSeconds(fromDaysToSeconds(1)),
+                        finish.plusSeconds(fromDaysToSeconds(1)));
         for (SessionEntity session : sessions) {
             if (session.getSessionId().equals(sessionId)) {
                 continue;
             }
-            if (session.getEndTime().plusSeconds(fromMinutesToSeconds(cleaningTimeInMinutes)).isAfter(start)) {
+            if (session.getEndTime().plusSeconds(fromMinutesToSeconds(cleaningTimeInMinutes)).isAfter(start)
+                    && session.getEndTime().plusSeconds(fromMinutesToSeconds(cleaningTimeInMinutes)).isBefore(finish)) {
                 throw new SessionDateTimeException("Session start time affects other sessions");
             }
-            if (session.getStartTime().isBefore(finish.plusSeconds(fromMinutesToSeconds(cleaningTimeInMinutes)))) {
+            if (session.getStartTime().isBefore(finish.plusSeconds(fromMinutesToSeconds(cleaningTimeInMinutes)))
+                    && session.getStartTime().isAfter(start)) {
                 throw new SessionDateTimeException("Session end time affects other sessions");
             }
         }

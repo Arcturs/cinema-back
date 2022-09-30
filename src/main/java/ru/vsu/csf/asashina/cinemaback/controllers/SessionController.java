@@ -2,7 +2,6 @@ package ru.vsu.csf.asashina.cinemaback.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
@@ -55,6 +54,4 @@ public class SessionController {
         sessionService.deleteSession(sessionId);
         return ResponseEntity.noContent().build();
     }
-
-    //TODO: CRUD
 }

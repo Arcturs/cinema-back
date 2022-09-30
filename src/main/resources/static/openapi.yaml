@@ -330,6 +330,157 @@ paths:
               schema:
                 type: string
 
+  # ----------------------------------------------------------------------
+  #                                 session
+  # ----------------------------------------------------------------------
+
+  /session/:
+    get:
+      tags:
+        - Session
+      description: Returns all sessions in pages
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 5
+      responses:
+        200:
+          description: Returns all sessions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paging'
+        400:
+          description: Invalid query params
+          content:
+            application/json:
+              schema:
+                type: string
+    post:
+      tags:
+        - Session
+      description: Creates session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionRequest'
+      responses:
+        201:
+          description: Session was successfully created
+        400:
+          description: Invalid requestBody
+          content:
+            application/json:
+              schema:
+                type: string
+        409:
+          description: Conflict with previous sessions
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /session/{id}:
+    get:
+      tags:
+        - Session
+      description: Gets session info by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: Session was successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                type: string
+        404:
+          description: Session with following id does not exist
+          content:
+            application/json:
+              schema:
+                type: string
+    delete:
+      tags:
+        - Session
+      description: Deletes session by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        204:
+          description: Session was successfully deleted
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                type: string
+    put:
+      tags:
+        - Session
+      description: Updates session by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionRequest'
+      responses:
+        200:
+          description: Session was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: string
+        404:
+          description: Session with following id does not exist
+          content:
+            application/json:
+              schema:
+                type: string
+        409:
+          description: Conflict with previous sessions
+          content:
+            application/json:
+              schema:
+                type: string
+
 # ----------------------------------------------------------------------
 
 components:
@@ -434,3 +585,66 @@ components:
           type: integer
         seatNumber:
           type: integer
+
+    SessionRequest:
+      type: object
+      properties:
+        screenId:
+          type: integer
+          format: int64
+          nullable: false
+        movieId:
+          type: integer
+          format: int64
+          nullable: false
+        startDate:
+          type: string
+          format: date
+          example: "dd.MM.yyyy"
+          nullable: false
+        startTime:
+          type: string
+          format: time
+          example: "HH:mm"
+          nullable: false
+        price:
+          type: integer
+          minimum: 200
+          maximum: 1500
+          nullable: false
+
+    SessionResponse:
+      type: object
+      properties:
+        sessionId:
+          type: integer
+          format: int64
+        startTime:
+          type: string
+          format: date-time
+          example: "dd.MM.yyyy HH:mm"
+        endTime:
+          type: string
+          format: date-time
+          example: "dd.MM.yyyy HH:mm"
+        price:
+          type: integer
+        screen:
+          $ref: '#/components/schemas/ScreenResponse'
+        movie:
+          $ref: '#/components/schemas/MovieResponse'
+        seatPlan:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeatPlanDTO'
+
+    SeatPlanDTO:
+      type: object
+      properties:
+        seatPlanForSessionId:
+          type: integer
+          format: int64
+        seat:
+          $ref: '#/components/schemas/SeatDTO'
+        isAvailable:
+          type: boolean

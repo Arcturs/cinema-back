@@ -27,10 +27,12 @@ public class SessionRequest {
 
     @NotNull
     @DateTimeFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate startDate;
 
     @NotNull
     @DateTimeFormat(pattern = "HH:mm")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
 
     @Min(200)
