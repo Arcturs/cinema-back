@@ -42,7 +42,7 @@ public class SessionService {
     public Page<SessionPageDTO> getAllFreshSessions(Integer pageNumber, Integer size) {
         Instant dateNow = Instant.now(clock);
         Instant dateFuture = dateNow.plusSeconds(fromDaysToSeconds(maxDaysToShow));
-        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("startTime").and(Sort.by("endTime")));
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("start_time").and(Sort.by("end_ time")));
         Page<SessionEntity> pages = sessionRepository.getFreshSessions(dateNow, dateFuture, pageable);
         return pages.map(sessionMapper::toPageDTOFromEntity);
     }
@@ -50,7 +50,7 @@ public class SessionService {
     public Page<SessionPageDTO> getAllFreshSessionsByMovieId(Long movieId, Integer pageNumber, Integer size) {
         Instant dateNow = Instant.now(clock);
         Instant dateFuture = dateNow.plusSeconds(fromDaysToSeconds(maxDaysToShow));
-        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("startTime").and(Sort.by("endTime")));
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("start_time").and(Sort.by("end_time")));
         Page<SessionEntity> pages = sessionRepository.getFreshSessionsByMovieId(dateNow, dateFuture, movieId, pageable);
         return pages.map(sessionMapper::toPageDTOFromEntity);
     }
@@ -116,8 +116,8 @@ public class SessionService {
 
         Instant finish = getFinishDateTime(start, duration);
         List<SessionEntity> sessions =
-                sessionRepository.findByScreenAndAndStartTimeAfterAndAndEndTimeBeforeOrOrderByStartTime(screen, now,
-                        nowPlusOneDay.plusSeconds(fromDaysToSeconds(1)));
+                sessionRepository.findByScreenIdAndAndStartTimeAfterAndAndEndTimeBeforeOrOrderByStartTime(
+                        screen.getScreenId(), now, nowPlusOneDay.plusSeconds(fromDaysToSeconds(1)));
         for (SessionEntity session : sessions) {
             if (session.getSessionId().equals(sessionId)) {
                 continue;

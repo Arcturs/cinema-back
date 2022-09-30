@@ -10,8 +10,15 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/changelog-master.xml
 
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    url: /openapi.yaml
+    path: /swagger-ui.html
+
 poster:
-  directory: c/Users/Public/posters
+  directory: C:\Users\Public\new_posters
 
 screen:
   maxScreenNumber: 16

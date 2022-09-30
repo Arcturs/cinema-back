@@ -31,7 +31,7 @@ public interface SessionMapper {
     @Mappings({
             @Mapping(target = "movie", expression = "java(movieMapper(entity.getMovie()))"),
             @Mapping(target = "screen", expression = "java(screenMapper(entity.getScreen()))"),
-            @Mapping(target = "seatPlan", expression = "java(screenMapper(entity.getSeatPlan()))")
+            @Mapping(target = "seatPlan", expression = "java(seatPlanMapper(entity.getSeatPlan()))")
     })
     SessionDTO toDTOFromEntity(SessionEntity entity);
 

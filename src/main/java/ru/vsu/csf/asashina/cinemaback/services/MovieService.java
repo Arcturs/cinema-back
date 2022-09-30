@@ -82,7 +82,7 @@ public class MovieService {
     @Transactional
     public MovieDTO updateMovie(MovieRequest request, Long movieId) throws IOException {
         MovieEntity entity = findMovieById(movieId);
-        if (entity.getSessions() != null || !entity.getSessions().isEmpty()) {
+        if (entity.getSessions() != null && !entity.getSessions().isEmpty()) {
             throw new SessionsExistException("Can not update movie due to existing sessions");
         }
 
