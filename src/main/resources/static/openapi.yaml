@@ -133,6 +133,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        404:
+          description: Movie with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     put:
       tags:
         - Movie
@@ -447,6 +453,12 @@ paths:
           description: Session was successfully deleted
         400:
           description: Invalid id type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Session with following id does not exist
           content:
             application/json:
               schema:

@@ -19,7 +19,6 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-//TODO: on deleting check for existing entity! And add 404
 public class SecurityConfiguration implements WebMvcConfigurer {
 
     private final static String USER = "USER";

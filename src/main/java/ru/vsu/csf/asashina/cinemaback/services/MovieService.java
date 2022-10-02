@@ -76,6 +76,7 @@ public class MovieService {
 
     @Transactional
     public void deleteMovie(Long movieId) {
+        findMovieById(movieId);
         movieRepository.deleteById(movieId);
     }
 
