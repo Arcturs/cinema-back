@@ -91,6 +91,7 @@ public class SessionService {
 
     @Transactional
     public void deleteSession(Long sessionId) {
+        getSessionById(sessionId);
         sessionRepository.deleteById(sessionId);
     }
 
