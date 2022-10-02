@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.vsu.csf.asashina.cinemaback.mappers.MovieMapper;
 import ru.vsu.csf.asashina.cinemaback.mappers.ScreenMapper;
 import ru.vsu.csf.asashina.cinemaback.mappers.SessionMapper;
+import ru.vsu.csf.asashina.cinemaback.mappers.UserMapper;
 
 @Configuration
 public class MapStructConfiguration {
@@ -20,7 +21,12 @@ public class MapStructConfiguration {
     }
 
     @Bean
-    SessionMapper sessionMapper() {
+    public SessionMapper sessionMapper() {
         return SessionMapper.INSTANCE;
+    }
+
+    @Bean
+    public UserMapper userMapper() {
+        return UserMapper.INSTANCE;
     }
 }

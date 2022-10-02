@@ -36,4 +36,8 @@
         <sqlFile path="alter/alter-seat_plan-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="7.1-Create-refresh_token-table.sql" author="Anastasiia Sashina">
+        <sqlFile path="init/create-user_refresh_token-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>

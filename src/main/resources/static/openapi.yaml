@@ -58,11 +58,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
     post:
       tags:
         - Movie
       description: Creates movie
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           multipart/form-data:
@@ -76,7 +78,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
 
   /movie/{id}:
     get:
@@ -102,17 +104,19 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         404:
           description: Movie with following id does not exist
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - Movie
       description: Deletes movie by id
+      security:
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -128,11 +132,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
     put:
       tags:
         - Movie
       description: Updates movie by id
+      security:
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -157,19 +163,19 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         404:
           description: Movie with following id does not exist
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         409:
           description: Cannot be updated due to conflict
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
 
   /movie/{id}/poster:
     get:
@@ -196,13 +202,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         404:
           description: Movie with following id does not exist
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
 
   /movie/{id}/sessions:
     get:
@@ -238,7 +244,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
 
   # ----------------------------------------------------------------------
   #                                 screen
@@ -272,11 +278,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
     post:
       tags:
         - Screen
       description: Creates screen with seats and seat plan
+      security:
+        - bearerAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -290,13 +298,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         405:
           description: Max number of screens was reached
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
 
   /screen/{id}:
     get:
@@ -322,13 +330,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         404:
           description: Screen with following id does not exist
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
 
   # ----------------------------------------------------------------------
   #                                 session
@@ -362,11 +370,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
     post:
       tags:
         - Session
       description: Creates session
+      security:
+        - bearerAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -380,13 +390,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         409:
           description: Conflict with previous sessions
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
 
   /session/{id}:
     get:
@@ -412,17 +422,19 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         404:
           description: Session with following id does not exist
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - Session
       description: Deletes session by id
+      security:
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -438,11 +450,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
     put:
       tags:
         - Session
       description: Updates session by id
+      security:
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -467,23 +481,148 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         404:
           description: Session with following id does not exist
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
         409:
           description: Conflict with previous sessions
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Error'
+
+  # ----------------------------------------------------------------------
+  #                                 user
+  # ----------------------------------------------------------------------
+
+  /user/credentials:
+    get:
+      tags:
+        - User
+      description: Returns user's credentials
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Returns credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credentials'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: User does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/sign-up:
+    post:
+      tags:
+        - User
+      description: Signs up new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpForm'
+      responses:
+        201:
+          description: User successfuly created, returns tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+        400:
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: User alredy exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/login:
+    post:
+      tags:
+        - User
+      description: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+      responses:
+        200:
+          description: User successfuly logged in, returns tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+        400:
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/refresh-token:
+    post:
+      tags:
+        - User
+      description: Refreshes access token
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: refreshToken
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Returns tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 # ----------------------------------------------------------------------
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     MovieSort:
       type: object
@@ -648,3 +787,95 @@ components:
           $ref: '#/components/schemas/SeatDTO'
         isAvailable:
           type: boolean
+
+    Credentials:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        surname:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ticket'
+
+    Role:
+      type: object
+      properties:
+        roleId:
+          type: integer
+          format: int64
+        roleName:
+          type: string
+
+    Ticket:
+      type: object
+      properties:
+        ticketId:
+          type: integer
+          format: int64
+        session:
+          $ref: '#/components/schemas/SessionResponse'
+        seat:
+          $ref: '#/components/schemas/SeatDTO'
+
+    SignUpForm:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+        surname:
+          type: string
+          nullable: false
+        email:
+          type: string
+          format: email
+          nullable: false
+        password:
+          type: string
+          format: password
+          nullable: false
+        repeatPassword:
+          type: string
+          format: password
+          nullable: false
+
+    Tokens:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          format: jwt
+        refreshToken:
+          type: string
+          format: uuid
+
+    LoginForm:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          nullable: false
+        password:
+          type: string
+          format: password
+          nullable: false
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

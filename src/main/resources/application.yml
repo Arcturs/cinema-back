@@ -26,3 +26,12 @@ screen:
 session:
   maxFreshDays: 3
   cleaningTimeInMinutes: 30
+
+security:
+  jwt:
+    secretKey: superDuper39Secret
+    expiresMs:
+      # 30 minutes
+      accessToken: 1 800 000
+      # in days
+      refreshToken: 30
