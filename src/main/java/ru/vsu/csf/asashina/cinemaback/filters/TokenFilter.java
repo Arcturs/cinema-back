@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import ru.vsu.csf.asashina.cinemaback.models.dtos.ErrorDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.UserDTO;
 import ru.vsu.csf.asashina.cinemaback.services.UserService;
 
@@ -66,7 +67,7 @@ public class TokenFilter {
         PrintWriter out = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        out.print(objectMapper.writeValueAsString(Map.of("message", message)));
+        out.print(objectMapper.writeValueAsString(new ErrorDTO(message)));
         out.flush();
     }
 }

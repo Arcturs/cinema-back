@@ -27,11 +27,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith(AUTH_HEADER)) {
             try {
                 tokenFilter.authenticate(authHeader);
+                filterChain.doFilter(request, response);
             } catch (Exception e) {
                 tokenFilter.sendErrorMessage(response, e.getMessage());
             }
         }
-        filterChain.doFilter(request, response);
     }
 }
 
