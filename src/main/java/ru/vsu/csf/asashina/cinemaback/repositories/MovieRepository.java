@@ -25,7 +25,7 @@ public interface MovieRepository extends JpaRepository<MovieEntity, Long> {
                     @Param("path") String path);
 
     @Modifying
-    @Query(value = "UPDATE movie SET poster_path = :path WHERE movie_id = :id", nativeQuery = true)
+    @Query(value = "UPDATE poster SET poster_path = :path WHERE movie_id = :id", nativeQuery = true)
     void updatePoster(@Param("id") Long movieId,
                       @Param("path") String path);
 }

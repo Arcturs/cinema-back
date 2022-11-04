@@ -2,6 +2,7 @@ package ru.vsu.csf.asashina.cinemaback.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -89,10 +90,15 @@ public class TokenService {
                 .sign(algorithm);
     }
 
+    //TODO: add checking date
     private UserDTO verifyRefreshToken(String refreshToken) {
         RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findById(refreshToken).orElseThrow(
                 () -> new ObjectNotExistsException("Cannot find refresh token for this user")
         );
+        Instant now = Instant.now(clock);
+        if (refreshTokenEntity.getDateExpire().isAfter(now)) {
+            throw new TokenExpiredException("Token has been already expired");
+        }
         return userMapper.fromEntityToDTO(refreshTokenEntity.getUser());
     }
 }
