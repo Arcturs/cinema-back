@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "cinema")
+@Table(name = "movie")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -32,7 +32,7 @@ public class MovieEntity {
     private String title;
 
     @Column(nullable = false)
-    private Double rating = 1.0;
+    private Double rating = 5.0;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, mappedBy = "movie")
     private Set<SessionEntity> sessions = new HashSet<>();

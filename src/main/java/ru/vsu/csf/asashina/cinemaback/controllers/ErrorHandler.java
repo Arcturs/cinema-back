@@ -1,5 +1,6 @@
 package ru.vsu.csf.asashina.cinemaback.controllers;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.vsu.csf.asashina.cinemaback.exceptions.*;
+import ru.vsu.csf.asashina.cinemaback.models.dtos.ErrorDTO;
 
 import java.util.stream.Collectors;
 
@@ -24,17 +26,18 @@ public class ErrorHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> internalServerErrorHandler(Exception e) {
         log.error(e.getMessage());
-        return ResponseBuilder.build(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_TEXT);
+        return ResponseBuilder.build(INTERNAL_SERVER_ERROR, new ErrorDTO(INTERNAL_SERVER_ERROR_TEXT));
     }
 
     @ExceptionHandler(ObjectNotExistsException.class)
     public ResponseEntity<?> notFoundHandler(BaseException e) {
-        return ResponseBuilder.build(NOT_FOUND, e.getMessage());
+        return ResponseBuilder.build(NOT_FOUND, new ErrorDTO(e.getMessage()));
     }
 
-    @ExceptionHandler({PosterException.class, TypeMismatchException.class})
+    @ExceptionHandler({PosterException.class, TypeMismatchException.class, PasswordDoesNotMatchException.class,
+            WrongInputLoginException.class})
     public ResponseEntity<?> badRequestHandler(Exception e) {
-        return ResponseBuilder.build(BAD_REQUEST, e.getMessage());
+        return ResponseBuilder.build(BAD_REQUEST, new ErrorDTO((e.getMessage())));
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
@@ -49,13 +52,18 @@ public class ErrorHandler {
                         )));
     }
 
-    @ExceptionHandler({SessionsExistException.class, SessionDateTimeException.class})
+    @ExceptionHandler({SessionsExistException.class, SessionDateTimeException.class, UserAlreadyExistsException.class})
     public ResponseEntity<?> conflictErrorHandler(BaseException e) {
-        return ResponseBuilder.build(CONFLICT, e.getMessage());
+        return ResponseBuilder.build(CONFLICT, new ErrorDTO(e.getMessage()));
     }
 
     @ExceptionHandler(MaxScreenNumberException.class)
     public ResponseEntity<?> methodNotAllowedErrorHandler(BaseException e) {
-        return ResponseBuilder.build(METHOD_NOT_ALLOWED, e.getMessage());
+        return ResponseBuilder.build(METHOD_NOT_ALLOWED, new ErrorDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<?> forbiddenErrorHandler(BaseException e) {
+        return ResponseBuilder.build(FORBIDDEN, new ErrorDTO(e.getMessage()));
     }
 }

@@ -1,0 +1,893 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: localhost
+    url: http://localhost:8080
+info:
+  version: "1.0.0"
+  title: Online cinema API
+  description: Project made for VSU
+  contact:
+    name: Anastasiya Sashina
+    email: yaninastya2010@yandex.ru
+
+paths:
+
+  # ----------------------------------------------------------------------
+  #                                 movie
+  # ----------------------------------------------------------------------
+
+  /movie/:
+    get:
+      tags:
+        - Movie
+      description: Returns all movies in pages
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 5
+        - in: query
+          name: title
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            $ref: '#/components/schemas/MovieSort'
+        - in: query
+          name: isAsc
+          schema:
+            type: boolean
+            default: true
+      responses:
+        200:
+          description: Returns all movies
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paging'
+        400:
+          description: Invalid query params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Movie
+      description: Creates movie
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MovieRequest'
+      responses:
+        201:
+          description: Movie was successfully created
+        400:
+          description: Invalid requestBody
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movie/{id}:
+    get:
+      tags:
+        - Movie
+      description: Gets movie info by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: Movie was successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieResponse'
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Movie with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Movie
+      description: Deletes movie by id
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        204:
+          description: Movie was successfully deleted
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Movie with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Movie
+      description: Updates movie by id
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MovieRequest'
+      responses:
+        200:
+          description: Movie was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieResponse'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Movie with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Cannot be updated due to conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movie/{id}/poster:
+    get:
+      tags:
+        - Movie
+      description: Gets movie's poster by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: Movie's poster was successfully fetched
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Movie with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movie/{id}/sessions:
+    get:
+      tags:
+        - Movie
+      description: Gets sessions for specific movie
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 5
+      responses:
+        200:
+          description: Shows all sessions for certain movie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paging'
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ----------------------------------------------------------------------
+  #                                 screen
+  # ----------------------------------------------------------------------
+
+  /screen/:
+    get:
+      tags:
+        - Screen
+      description: Returns all screens in pages
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 5
+      responses:
+        200:
+          description: Returns all screens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paging'
+        400:
+          description: Invalid query params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Screen
+      description: Creates screen with seats and seat plan
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScreenRequest'
+      responses:
+        201:
+          description: Screen was successfully created
+        400:
+          description: Invalid requestBody
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        405:
+          description: Max number of screens was reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /screen/{id}:
+    get:
+      tags:
+        - Screen
+      description: Gets screen info by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: Screen was successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScreenResponse'
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Screen with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ----------------------------------------------------------------------
+  #                                 session
+  # ----------------------------------------------------------------------
+
+  /session/:
+    get:
+      tags:
+        - Session
+      description: Returns all sessions in pages
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 5
+      responses:
+        200:
+          description: Returns all sessions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paging'
+        400:
+          description: Invalid query params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Session
+      description: Creates session
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionRequest'
+      responses:
+        201:
+          description: Session was successfully created
+        400:
+          description: Invalid requestBody
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Conflict with previous sessions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /session/{id}:
+    get:
+      tags:
+        - Session
+      description: Gets session info by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: Session was successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Session with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Session
+      description: Deletes session by id
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        204:
+          description: Session was successfully deleted
+        400:
+          description: Invalid id type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Session with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Session
+      description: Updates session by id
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionRequest'
+      responses:
+        200:
+          description: Session was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Session with following id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Conflict with previous sessions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ----------------------------------------------------------------------
+  #                                 user
+  # ----------------------------------------------------------------------
+
+  /user/credentials:
+    get:
+      tags:
+        - User
+      description: Returns user's credentials
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Returns credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credentials'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: User does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/sign-up:
+    post:
+      tags:
+        - User
+      description: Signs up new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpForm'
+      responses:
+        201:
+          description: User successfuly created, returns tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+        400:
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: User alredy exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/login:
+    post:
+      tags:
+        - User
+      description: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+      responses:
+        200:
+          description: User successfuly logged in, returns tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+        400:
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/refresh-token:
+    post:
+      tags:
+        - User
+      description: Refreshes access token
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: refreshToken
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Returns tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+# ----------------------------------------------------------------------
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    MovieSort:
+      type: object
+      properties:
+        sort:
+          type: string
+          enum: [ BY_TITLE, BY_RATING, BY_DURATION ]
+
+    Paging:
+      type: object
+      properties:
+        paging:
+          type: object
+          properties:
+            pageNumber:
+              type: integer
+            pageSize:
+              type: integer
+            totalPages:
+              type: integer
+        data:
+          type: array
+          items:
+            type: object
+
+    MovieRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          nullable: false
+        duration:
+          type: string
+          format: time
+          example: "HH:mm"
+        title:
+          type: string
+          nullable: false
+        poster:
+          type: string
+          format: binary
+
+    MovieResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          type: string
+        duration:
+          type: string
+          format: time
+          example: "HH:mm"
+        title:
+          type: string
+        rating:
+          type: number
+          format: double
+
+    ScreenRequest:
+      type: object
+      properties:
+        rows:
+          type: integer
+          nullable: false
+          minimum: 1
+          maximum: 16
+        seats:
+          type: integer
+          nullable: false
+          minimum: 1
+          maximum: 20
+
+    ScreenResponse:
+      type: object
+      properties:
+        screenId:
+          type: integer
+          format: int64
+        screenNumber:
+          type: integer
+        rows:
+          type: integer
+        seats:
+          type: integer
+        seatsSet:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeatDTO'
+
+    SeatDTO:
+      type: object
+      properties:
+        seatId:
+          type: integer
+          format: int64
+        row:
+          type: integer
+        seatNumber:
+          type: integer
+
+    SessionRequest:
+      type: object
+      properties:
+        screenId:
+          type: integer
+          format: int64
+          nullable: false
+        movieId:
+          type: integer
+          format: int64
+          nullable: false
+        startDate:
+          type: string
+          format: date
+          example: "dd.MM.yyyy"
+          nullable: false
+        startTime:
+          type: string
+          format: time
+          example: "HH:mm"
+          nullable: false
+        price:
+          type: integer
+          minimum: 200
+          maximum: 1500
+          nullable: false
+
+    SessionResponse:
+      type: object
+      properties:
+        sessionId:
+          type: integer
+          format: int64
+        startTime:
+          type: string
+          format: date-time
+          example: "dd.MM.yyyy HH:mm"
+        endTime:
+          type: string
+          format: date-time
+          example: "dd.MM.yyyy HH:mm"
+        price:
+          type: integer
+        screen:
+          $ref: '#/components/schemas/ScreenResponse'
+        movie:
+          $ref: '#/components/schemas/MovieResponse'
+        seatPlan:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeatPlanDTO'
+
+    SeatPlanDTO:
+      type: object
+      properties:
+        seatPlanForSessionId:
+          type: integer
+          format: int64
+        seat:
+          $ref: '#/components/schemas/SeatDTO'
+        isAvailable:
+          type: boolean
+
+    Credentials:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        surname:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ticket'
+
+    Role:
+      type: object
+      properties:
+        roleId:
+          type: integer
+          format: int64
+        roleName:
+          type: string
+
+    Ticket:
+      type: object
+      properties:
+        ticketId:
+          type: integer
+          format: int64
+        session:
+          $ref: '#/components/schemas/SessionResponse'
+        seat:
+          $ref: '#/components/schemas/SeatDTO'
+
+    SignUpForm:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+        surname:
+          type: string
+          nullable: false
+        email:
+          type: string
+          format: email
+          nullable: false
+        password:
+          type: string
+          format: password
+          nullable: false
+        repeatPassword:
+          type: string
+          format: password
+          nullable: false
+
+    Tokens:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          format: jwt
+        refreshToken:
+          type: string
+          format: uuid
+
+    LoginForm:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          nullable: false
+        password:
+          type: string
+          format: password
+          nullable: false
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

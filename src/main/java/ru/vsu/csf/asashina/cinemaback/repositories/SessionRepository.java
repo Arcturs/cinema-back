@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.vsu.csf.asashina.cinemaback.models.entities.ScreenEntity;
 import ru.vsu.csf.asashina.cinemaback.models.entities.SessionEntity;
 
 import java.time.Instant;
@@ -31,11 +30,18 @@ public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
               AND end_time <= :dateFresh
               AND movie_id = :movieId""", nativeQuery = true)
     Page<SessionEntity> getFreshSessionsByMovieId(@Param("dateNow") Instant dateNow,
-                                         @Param("dateFresh") Instant dateFresh,
-                                         @Param("movieId") Long movieId,
-                                         Pageable pageable);
+                                                  @Param("dateFresh") Instant dateFresh,
+                                                  @Param("movieId") Long movieId,
+                                                  Pageable pageable);
 
-    List<SessionEntity> findByScreenAndAndStartTimeAfterAndAndEndTimeBeforeOrOrderByStartTime(ScreenEntity screen,
-                                                                            Instant startTime,
-                                                                            Instant endTime);
+    @Query(value = """
+            SELECT *
+            FROM session
+            WHERE screen_id = :screenId
+              AND (start_time >= :startTime
+              OR end_time <= :endTime)
+            ORDER BY start_time""", nativeQuery = true)
+    List<SessionEntity> findByScreenIdAndAndStartTimeAfterAndAndEndTimeBeforeOrOrderByStartTime(Long screenId,
+                                                                                                Instant startTime,
+                                                                                                Instant endTime);
 }

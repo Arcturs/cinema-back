@@ -25,7 +25,7 @@ public class ScreenController {
     public ResponseEntity<?> getScreens(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
             @RequestParam(value = "size", required = false, defaultValue = "5") Integer size) {
-        Page<ScreenPageDTO> pages = screenService.getScreenInPages(pageNumber, size);
+        Page<ScreenPageDTO> pages = screenService.getScreenInPages(pageNumber - 1, size);
         return ResponseBuilder.build(new PagingDTO(pageNumber, size, pages.getTotalPages()),
                 pages.getContent());
     }

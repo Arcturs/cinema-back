@@ -22,15 +22,10 @@ public interface ScreenMapper {
 
     ScreenPageDTO toPageDTOFromEntity(ScreenEntity entity);
 
-    @Mappings({
-            @Mapping(target = "seatsSet", expression = "java(seatDTOMapping(entity.getSeatsSet()))"),
-            @Mapping(target = "sessions", expression = "java(sessionDTOMapping(entity.getSessions()))")
-    })
+    @Mapping(target = "seatsSet", expression = "java(seatDTOMapping(entity.getSeatsSet()))")
     ScreenDTO toDTOFromEntity(ScreenEntity entity);
 
     Set<SeatDTO> seatDTOMapping(Set<SeatEntity> set);
-
-    Set<SessionPageDTO> sessionDTOMapping(Set<SessionEntity> set);
 
     ScreenEntity fromRequestToEntity(ScreenRequest request, Integer screenNumber);
 }

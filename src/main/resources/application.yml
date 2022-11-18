@@ -10,8 +10,15 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/changelog-master.xml
 
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    url: /openapi.yaml
+    path: /swagger-ui.html
+
 poster:
-  directory: c/Users/Public/posters
+  directory: C:\Users\Public\new_posters
 
 screen:
   maxScreenNumber: 16
@@ -19,3 +26,12 @@ screen:
 session:
   maxFreshDays: 3
   cleaningTimeInMinutes: 30
+
+security:
+  jwt:
+    secretKey: superDuper39Secret
+    expiresMs:
+      # 30 minutes
+      accessToken: 1 800 000
+      # in days
+      refreshToken: 30

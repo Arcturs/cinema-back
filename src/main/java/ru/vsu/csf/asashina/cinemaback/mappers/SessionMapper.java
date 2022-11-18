@@ -22,16 +22,19 @@ public interface SessionMapper {
 
     SessionMapper INSTANCE = Mappers.getMapper(SessionMapper.class);
 
+    MovieMapper movieMapper = Mappers.getMapper(MovieMapper.class);
+    ScreenMapper screenMapper = Mappers.getMapper(ScreenMapper.class);
+
     @Mappings({
-            @Mapping(target = "movie", expression = "java(movieMapper(entity.getMovie()))"),
-            @Mapping(target = "screen", expression = "java(screenMapper(entity.getScreen()))")
+            @Mapping(target = "movie", expression = "java(movieMapper.toDTOFromEntity(entity.getMovie()))"),
+            @Mapping(target = "screen", expression = "java(screenMapper.toDTOFromEntity(entity.getScreen()))")
     })
     SessionPageDTO toPageDTOFromEntity(SessionEntity entity);
 
     @Mappings({
-            @Mapping(target = "movie", expression = "java(movieMapper(entity.getMovie()))"),
-            @Mapping(target = "screen", expression = "java(screenMapper(entity.getScreen()))"),
-            @Mapping(target = "seatPlan", expression = "java(screenMapper(entity.getSeatPlan()))")
+            @Mapping(target = "movie", expression = "java(movieMapper.toDTOFromEntity(entity.getMovie()))"),
+            @Mapping(target = "screen", expression = "java(screenMapper.toDTOFromEntity(entity.getScreen()))"),
+            @Mapping(target = "seatPlan", expression = "java(seatPlanMapper(entity.getSeatPlan()))")
     })
     SessionDTO toDTOFromEntity(SessionEntity entity);
 
@@ -49,12 +52,8 @@ public interface SessionMapper {
     void updateSessionEntity(@MappingTarget SessionEntity entity, SessionRequest request, Instant start, Instant end,
                              MovieEntity movie, ScreenEntity screen);
 
-    MovieDTO movieMapper(MovieEntity entity);
-
-    ScreenDTO screenMapper(ScreenEntity entity);
-
     SeatDTO seatMapper(SeatEntity entity);
 
-    @Mapping(target = "seat", expression = "java(seatMapper(entity.getSeat()))")
+    @Mapping(target = "seat", expression = "java(seatMapperDTO(entity.getSeat()))")
     Set<SeatPlanDTO> seatPlanMapper(Set<SeatPlanEntity> entity);
 }

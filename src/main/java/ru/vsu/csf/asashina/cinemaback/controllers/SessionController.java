@@ -2,7 +2,6 @@ package ru.vsu.csf.asashina.cinemaback.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
@@ -26,7 +25,7 @@ public class SessionController {
     public ResponseEntity<?> getAllFreshSessions(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
             @RequestParam(value = "size", required = false, defaultValue = "5") Integer size) {
-        Page<SessionPageDTO> pages = sessionService.getAllFreshSessions(pageNumber, size);
+        Page<SessionPageDTO> pages = sessionService.getAllFreshSessions(pageNumber - 1, size);
         return ResponseBuilder.build(new PagingDTO(pageNumber, size, pages.getTotalPages()),
                 pages.getContent());
     }
@@ -55,6 +54,4 @@ public class SessionController {
         sessionService.deleteSession(sessionId);
         return ResponseEntity.noContent().build();
     }
-
-    //TODO: CRUD
 }

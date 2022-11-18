@@ -25,6 +25,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/movie")
+//TODO: set rating for movie
 public class MovieController {
 
     private final MovieService movieService;
@@ -37,7 +38,7 @@ public class MovieController {
             @RequestParam(value = "title", required = false, defaultValue = "") String title,
             @RequestParam(value = "sort", required = false, defaultValue = "BY_RATING") MovieSortEnum sort,
             @RequestParam(value = "isAsc", required = false, defaultValue = "true") Boolean isAsc) {
-        Page<MoviePageDTO> pages = movieService.getMoviesInPages(pageNumber, size, title, sort, isAsc);
+        Page<MoviePageDTO> pages = movieService.getMoviesInPages(pageNumber - 1, size, title, sort, isAsc);
         return ResponseBuilder.build(new PagingDTO(pageNumber, size, pages.getTotalPages()),
                 pages.getContent());
     }
@@ -60,7 +61,7 @@ public class MovieController {
             @PathVariable("id") Long movieId,
             @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
             @RequestParam(value = "size", required = false, defaultValue = "5") Integer size) {
-        Page<SessionPageDTO> pages = sessionService.getAllFreshSessionsByMovieId(movieId, pageNumber, size);
+        Page<SessionPageDTO> pages = sessionService.getAllFreshSessionsByMovieId(movieId, pageNumber - 1, size);
         return ResponseBuilder.build(new PagingDTO(pageNumber, size, pages.getTotalPages()),
                 pages.getContent());
     }
