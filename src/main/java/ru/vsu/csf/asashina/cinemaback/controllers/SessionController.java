@@ -24,8 +24,9 @@ public class SessionController {
     @GetMapping("")
     public ResponseEntity<?> getAllFreshSessions(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
-            @RequestParam(value = "size", required = false, defaultValue = "5") Integer size) {
-        Page<SessionPageDTO> pages = sessionService.getAllFreshSessions(pageNumber - 1, size);
+            @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
+            @RequestParam(value = "movieId", required = false, defaultValue = "") Long movieId) {
+        Page<SessionPageDTO> pages = sessionService.getAllFreshSessions(movieId, pageNumber - 1, size);
         return ResponseBuilder.build(new PagingDTO(pageNumber, size, pages.getTotalPages()),
                 pages.getContent());
     }

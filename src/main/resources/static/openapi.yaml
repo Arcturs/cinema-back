@@ -216,42 +216,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /movie/{id}/sessions:
-    get:
-      tags:
-        - Movie
-      description: Gets sessions for specific movie
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-            format: int64
-          required: true
-        - in: query
-          name: pageNumber
-          schema:
-            type: integer
-            default: 1
-        - in: query
-          name: size
-          schema:
-            type: integer
-            default: 5
-      responses:
-        200:
-          description: Shows all sessions for certain movie
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Paging'
-        400:
-          description: Invalid id type
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
   # ----------------------------------------------------------------------
   #                                 screen
   # ----------------------------------------------------------------------
@@ -364,6 +328,11 @@ paths:
           schema:
             type: integer
             default: 5
+        - in: query
+          name: movieId
+          schema:
+            type: integer
+            format: int64
       responses:
         200:
           description: Returns all sessions

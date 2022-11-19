@@ -18,21 +18,13 @@ public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
             SELECT *
             FROM session
             WHERE start_time >= :dateNow 
-              AND end_time <= :dateFresh""", nativeQuery = true)
+              AND end_time <= :dateFresh
+              AND (:movieId IS NULL OR movie_id = CAST(CAST(:movieId AS CHARACTER VARYING) AS BIGINT))""",
+            nativeQuery = true)
     Page<SessionEntity> getFreshSessions(@Param("dateNow") Instant dateNow,
                                          @Param("dateFresh") Instant dateFresh,
+                                         @Param("movieId") Long movieId,
                                          Pageable pageable);
-
-    @Query(value = """
-            SELECT *
-            FROM session
-            WHERE start_time >= :dateNow 
-              AND end_time <= :dateFresh
-              AND movie_id = :movieId""", nativeQuery = true)
-    Page<SessionEntity> getFreshSessionsByMovieId(@Param("dateNow") Instant dateNow,
-                                                  @Param("dateFresh") Instant dateFresh,
-                                                  @Param("movieId") Long movieId,
-                                                  Pageable pageable);
 
     @Query(value = """
             SELECT *

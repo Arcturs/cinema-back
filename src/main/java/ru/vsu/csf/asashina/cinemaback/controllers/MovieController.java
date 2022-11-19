@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.PagingDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.movie.MoviePageDTO;
 import ru.vsu.csf.asashina.cinemaback.models.enumerations.MovieSortEnum;
@@ -29,7 +28,6 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 public class MovieController {
 
     private final MovieService movieService;
-    private final SessionService sessionService;
 
     @GetMapping
     public ResponseEntity<?> getMoviesInPages(
@@ -54,16 +52,6 @@ public class MovieController {
         var headers = new HttpHeaders();
         headers.setContentLength(in.contentLength());
         return new ResponseEntity(in, headers, OK);
-    }
-
-    @GetMapping("/{id}/sessions")
-    public ResponseEntity<?> getSessionsOnMovie(
-            @PathVariable("id") Long movieId,
-            @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
-            @RequestParam(value = "size", required = false, defaultValue = "5") Integer size) {
-        Page<SessionPageDTO> pages = sessionService.getAllFreshSessionsByMovieId(movieId, pageNumber - 1, size);
-        return ResponseBuilder.build(new PagingDTO(pageNumber, size, pages.getTotalPages()),
-                pages.getContent());
     }
 
     @PostMapping(value = "", consumes = MULTIPART_FORM_DATA_VALUE)

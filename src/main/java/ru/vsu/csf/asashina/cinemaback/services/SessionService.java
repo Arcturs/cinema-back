@@ -39,19 +39,11 @@ public class SessionService {
     @Value("${session.cleaningTimeInMinutes}")
     private Integer cleaningTimeInMinutes;
 
-    public Page<SessionPageDTO> getAllFreshSessions(Integer pageNumber, Integer size) {
+    public Page<SessionPageDTO> getAllFreshSessions(Long movieId, Integer pageNumber, Integer size) {
         Instant dateNow = Instant.now(clock);
         Instant dateFuture = dateNow.plusSeconds(fromDaysToSeconds(maxDaysToShow));
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("start_time").and(Sort.by("end_time")));
-        Page<SessionEntity> pages = sessionRepository.getFreshSessions(dateNow, dateFuture, pageable);
-        return pages.map(sessionMapper::toPageDTOFromEntity);
-    }
-
-    public Page<SessionPageDTO> getAllFreshSessionsByMovieId(Long movieId, Integer pageNumber, Integer size) {
-        Instant dateNow = Instant.now(clock);
-        Instant dateFuture = dateNow.plusSeconds(fromDaysToSeconds(maxDaysToShow));
-        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("start_time").and(Sort.by("end_time")));
-        Page<SessionEntity> pages = sessionRepository.getFreshSessionsByMovieId(dateNow, dateFuture, movieId, pageable);
+        Page<SessionEntity> pages = sessionRepository.getFreshSessions(dateNow, dateFuture, movieId, pageable);
         return pages.map(sessionMapper::toPageDTOFromEntity);
     }
 
