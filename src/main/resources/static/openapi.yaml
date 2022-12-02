@@ -649,7 +649,7 @@ components:
     MovieResponse:
       type: object
       properties:
-        id:
+        movieId:
           type: integer
           format: int64
         description:
