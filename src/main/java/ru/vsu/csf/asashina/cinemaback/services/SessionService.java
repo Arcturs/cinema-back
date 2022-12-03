@@ -59,7 +59,7 @@ public class SessionService {
         MovieEntity movie = movieService.findMovieById(request.getMovieId());
         ScreenEntity screen = screenService.getEntityById(request.getScreenId());
         Instant start = LocalDateTime.of(request.getStartDate(), request.getStartTime())
-                .toInstant(clock.getZone().getRules().getOffset(Instant.now()));
+                .toInstant(clock.getZone().getRules().getOffset(Instant.now(clock)));
         validateStartDateAndStartTime(null, start, movie.getDuration(), screen);
         SessionEntity entity = sessionRepository.save(sessionMapper.fromRequestToEntity(request, start,
                 getFinishDateTime(start, movie.getDuration()), movie, screen));
@@ -74,7 +74,7 @@ public class SessionService {
         MovieEntity movie = movieService.findMovieById(session.getMovie().getMovieId());
         ScreenEntity screen = screenService.getEntityById(request.getScreenId());
         Instant start = LocalDateTime.of(request.getStartDate(), request.getStartTime())
-                .toInstant(clock.getZone().getRules().getOffset(Instant.now()));
+                .toInstant(clock.getZone().getRules().getOffset(Instant.now(clock)));
         validateStartDateAndStartTime(sessionId, start, movie.getDuration(), screen);
         sessionMapper.updateSessionEntity(session, request, start,
                 getFinishDateTime(start, movie.getDuration()), movie, screen);
@@ -104,7 +104,7 @@ public class SessionService {
         Instant now = Instant.now(clock);
         Instant nowPlusOneDay = now.plusSeconds(fromDaysToSeconds(1));
         if (start.isBefore(nowPlusOneDay)) {
-            throw new SessionDateTimeException("You cannot create session due to invalid time");
+            throw new SessionDateTimeException("You cannot create/change session which will starts in 24 hours");
         }
 
         Instant finish = getFinishDateTime(start, duration);

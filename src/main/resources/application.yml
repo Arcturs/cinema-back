@@ -17,6 +17,10 @@ springdoc:
     url: /openapi.yaml
     path: /swagger-ui.html
 
+server:
+  shutdown: GRACEFUL
+  forward-headers-strategy: NATIVE
+
 poster:
   directory: C:\Users\Public\new_posters
 
