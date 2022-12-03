@@ -71,7 +71,7 @@ public class SessionService {
         SessionEntity session = sessionRepository.findById(sessionId).orElseThrow(
                 () -> new ObjectNotExistsException("Session with following id does not exist")
         );
-        MovieEntity movie = movieService.findMovieById(request.getMovieId());
+        MovieEntity movie = movieService.findMovieById(session.getMovie().getMovieId());
         ScreenEntity screen = screenService.getEntityById(request.getScreenId());
         Instant start = LocalDateTime.of(request.getStartDate(), request.getStartTime())
                 .toInstant(clock.getZone().getRules().getOffset(Instant.now()));
