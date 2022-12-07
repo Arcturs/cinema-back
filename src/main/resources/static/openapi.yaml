@@ -687,6 +687,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Order
+      description: Cancels order
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      responses:
+        204:
+          description: Order was successfully canceled
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 
 # ----------------------------------------------------------------------

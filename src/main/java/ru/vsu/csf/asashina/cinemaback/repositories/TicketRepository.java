@@ -20,4 +20,6 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     void updateOrderNumber(@Param("incr") int increment);
 
     List<TicketEntity> findByOrderId(String orderId);
+
+    void deleteAllByOrderId(String orderId);
 }

@@ -44,6 +44,11 @@ public class SeatPlanService {
         return seatPlanMapper.fromEntityToDTOList(seatPlanRepository.saveAll(bookedSeats));
     }
 
+    @Transactional
+    public void freeSeats(List<Long> seatIds, Long sessionId) {
+        seatPlanRepository.freeSeatsBySessionId(seatIds, sessionId);
+    }
+
     private List<SeatPlanEntity> validateSeatPlanForAlreadyBookedSeatsAndCorrectSessionId(
             List<SeatPlanEntity> bookedSeats, Long sessionId) {
         return bookedSeats.stream()

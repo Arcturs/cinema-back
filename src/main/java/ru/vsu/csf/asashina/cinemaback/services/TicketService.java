@@ -70,6 +70,11 @@ public class TicketService {
         return ticketMapper.fromEntityToDTOList(tickets);
     }
 
+    @Transactional
+    public void deleteTickets(String orderId) {
+        ticketRepository.deleteAllByOrderId(orderId);
+    }
+
     private List<TicketEntity> createTickets(List<SeatPlanDTO> seatPlan, SessionEntity session, UserEntity user,
                                              String orderId, Instant startTransactionTime) {
         Instant endTransactionTime = startTransactionTime.plusSeconds(fromMinutesToSeconds(paymentMin));

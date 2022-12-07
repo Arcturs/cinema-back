@@ -33,6 +33,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         http.authorizeRequests()
                 .antMatchers(GET, "/user/**", "/order/*").hasAnyAuthority(USER)
                 .antMatchers(POST, "/user/refresh-token", "/order").hasAnyAuthority(USER)
+                .antMatchers(DELETE, "/order/*").hasAnyAuthority(USER)
 
                 .antMatchers(GET, "/movie", "/movie/**", "/screen", "/screen/*", "/session",
                         "/session/*").permitAll()

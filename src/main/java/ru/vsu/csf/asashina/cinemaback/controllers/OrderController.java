@@ -35,4 +35,11 @@ public class OrderController {
                                              Authentication authentication) {
         return ResponseBuilder.build(OK, ticketService.getTicketDetails(orderId, authentication));
     }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<?> cancelOrder(@PathVariable("orderId") String orderId,
+                                         Authentication authentication) {
+        orderService.cancelOrder(orderId, authentication);
+        return ResponseEntity.noContent().build();
+    }
 }
