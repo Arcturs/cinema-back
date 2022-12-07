@@ -32,7 +32,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 .antMatchers(GET, "/user/**", "/order/*").hasAnyAuthority(USER)
-                .antMatchers(POST, "/user/refresh-token", "/order").hasAnyAuthority(USER)
+                .antMatchers(POST, "/order", "/order/**").hasAnyAuthority(USER)
                 .antMatchers(DELETE, "/order/*").hasAnyAuthority(USER)
 
                 .antMatchers(GET, "/movie", "/movie/**", "/screen", "/screen/*", "/session",

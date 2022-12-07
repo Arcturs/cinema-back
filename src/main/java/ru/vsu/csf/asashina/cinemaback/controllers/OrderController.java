@@ -42,4 +42,11 @@ public class OrderController {
         orderService.cancelOrder(orderId, authentication);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{orderId}/book")
+    public ResponseEntity<?> bookOrder(@PathVariable("orderId") String orderId,
+                                       Authentication authentication) {
+        ticketService.bookTickets(orderId, authentication);
+        return ResponseEntity.noContent().build();
+    }
 }

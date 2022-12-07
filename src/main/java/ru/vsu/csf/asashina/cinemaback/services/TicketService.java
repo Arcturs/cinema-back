@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.csf.asashina.cinemaback.exceptions.ObjectNotExistsException;
+import ru.vsu.csf.asashina.cinemaback.exceptions.SessionHasAlreadyStartedException;
 import ru.vsu.csf.asashina.cinemaback.exceptions.TicketDoesNotBelongToUserException;
 import ru.vsu.csf.asashina.cinemaback.mappers.TicketMapper;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.SeatPlanDTO;
@@ -30,6 +31,9 @@ public class TicketService {
 
     @Value("${order.paymentMin}")
     private Integer paymentMin;
+
+    @Value("${order.bookingTimeRestrictionBeforeFilmStartsMin}")
+    private Integer bookingTimeRestrictionBeforeFilmStartsMin;
 
     private final TicketRepository ticketRepository;
 
@@ -60,6 +64,31 @@ public class TicketService {
     }
 
     public List<TicketDTO> getTicketDetails(String orderId, Authentication authentication) {
+        return ticketMapper.fromEntityToDTOList(getTicketDetailsForUser(orderId, authentication));
+    }
+
+    @Transactional
+    public void deleteTickets(String orderId) {
+        ticketRepository.deleteAllByOrderId(orderId);
+    }
+
+    @Transactional
+    public void bookTickets(String orderId, Authentication authentication) {
+        List<TicketEntity> tickets = getTicketDetailsForUser(orderId, authentication);
+        SessionEntity session = tickets.get(0).getSession();
+        Instant now = Instant.now(clock);
+        Instant endTransactionTime = session.getStartTime().minusSeconds(
+                fromMinutesToSeconds(bookingTimeRestrictionBeforeFilmStartsMin)
+        );
+        if (endTransactionTime.isBefore(now)) {
+            throw new SessionHasAlreadyStartedException("Session will start in few minutes, you cannot book");
+        }
+        ticketRepository.saveAll(tickets.stream()
+                .peek(el -> el.setTransactionEndTimestamp(endTransactionTime))
+                .toList());
+    }
+
+    private List<TicketEntity> getTicketDetailsForUser(String orderId, Authentication authentication) {
         List<TicketEntity> tickets = ticketRepository.findByOrderId(orderId);
         if (tickets.isEmpty()) {
             throw new ObjectNotExistsException("Ticket with following order id does not exist");
@@ -67,12 +96,7 @@ public class TicketService {
         if (!tickets.get(0).getUser().getEmail().equals(authentication.getPrincipal())) {
             throw new TicketDoesNotBelongToUserException("This ticket does not belong to current user");
         }
-        return ticketMapper.fromEntityToDTOList(tickets);
-    }
-
-    @Transactional
-    public void deleteTickets(String orderId) {
-        ticketRepository.deleteAllByOrderId(orderId);
+        return tickets;
     }
 
     private List<TicketEntity> createTickets(List<SeatPlanDTO> seatPlan, SessionEntity session, UserEntity user,

@@ -721,6 +721,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /order/{orderId}/book:
+    post:
+      tags:
+        - Order
+      description: Books order
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      responses:
+        204:
+          description: Order was successfuly booked
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        405:
+          description: Session has already started, you cannot book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 # ----------------------------------------------------------------------
 
