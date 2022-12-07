@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.vsu.csf.asashina.cinemaback.models.request.CardNumberRequest;
 import ru.vsu.csf.asashina.cinemaback.models.request.ChosenSeatsRequest;
 import ru.vsu.csf.asashina.cinemaback.services.OrderService;
 import ru.vsu.csf.asashina.cinemaback.services.TicketService;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -47,6 +49,14 @@ public class OrderController {
     public ResponseEntity<?> bookOrder(@PathVariable("orderId") String orderId,
                                        Authentication authentication) {
         ticketService.bookTickets(orderId, authentication);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{orderId}/pay")
+    public ResponseEntity<?> payOrder(@PathVariable("orderId") String orderId,
+                                      @RequestBody @Valid CardNumberRequest request,
+                                      Authentication authentication) {
+        ticketService.buyTickets(orderId, authentication);
         return ResponseEntity.noContent().build();
     }
 }

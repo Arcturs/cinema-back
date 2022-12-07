@@ -761,6 +761,64 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        409:
+          description: Order is already paid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /order/{orderId}/pay:
+    post:
+      tags:
+        - Order
+      description: Payment
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+      responses:
+        204:
+          description: Order was successfuly paid
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        405:
+          description: Booking has expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Order is already paid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 
 # ----------------------------------------------------------------------
@@ -1060,3 +1118,9 @@ components:
       type: array
       items:
         $ref: '#/components/schema/Ticket'
+
+    Card:
+      type: object
+      properties:
+        cardNumber:
+          type: string

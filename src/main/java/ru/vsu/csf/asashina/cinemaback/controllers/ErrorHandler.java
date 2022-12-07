@@ -53,12 +53,13 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({SessionsExistException.class, SessionDateTimeException.class, UserAlreadyExistsException.class,
-            SeatsAreAlreadyBookedException.class})
+            SeatsAreAlreadyBookedException.class, OrderIsAlreadyPaidException.class})
     public ResponseEntity<?> conflictErrorHandler(BaseException e) {
         return ResponseBuilder.build(CONFLICT, new ErrorDTO(e.getMessage()));
     }
 
-    @ExceptionHandler({MaxScreenNumberException.class, SessionHasAlreadyStartedException.class})
+    @ExceptionHandler({MaxScreenNumberException.class, SessionHasAlreadyStartedException.class,
+            TicketDateExpireException.class})
     public ResponseEntity<?> methodNotAllowedErrorHandler(BaseException e) {
         return ResponseBuilder.build(METHOD_NOT_ALLOWED, new ErrorDTO(e.getMessage()));
     }

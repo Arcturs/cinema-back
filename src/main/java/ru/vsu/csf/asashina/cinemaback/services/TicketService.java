@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vsu.csf.asashina.cinemaback.exceptions.ObjectNotExistsException;
-import ru.vsu.csf.asashina.cinemaback.exceptions.SessionHasAlreadyStartedException;
-import ru.vsu.csf.asashina.cinemaback.exceptions.TicketDoesNotBelongToUserException;
+import ru.vsu.csf.asashina.cinemaback.exceptions.*;
 import ru.vsu.csf.asashina.cinemaback.mappers.TicketMapper;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.SeatPlanDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.TicketDTO;
@@ -80,11 +78,30 @@ public class TicketService {
         Instant endTransactionTime = session.getStartTime().minusSeconds(
                 fromMinutesToSeconds(bookingTimeRestrictionBeforeFilmStartsMin)
         );
+        if (tickets.get(0).getIsPaid()) {
+            throw new OrderIsAlreadyPaidException("Order is already paid");
+        }
         if (endTransactionTime.isBefore(now)) {
             throw new SessionHasAlreadyStartedException("Session will start in few minutes, you cannot book");
         }
         ticketRepository.saveAll(tickets.stream()
                 .peek(el -> el.setTransactionEndTimestamp(endTransactionTime))
+                .toList());
+    }
+
+    @Transactional
+    public void buyTickets(String orderId, Authentication authentication) {
+        List<TicketEntity> tickets = getTicketDetailsForUser(orderId, authentication);
+        Instant now = Instant.now(clock);
+        Instant endTransactionTime = tickets.get(0).getTransactionEndTimestamp();
+        if (endTransactionTime.isBefore(now)) {
+            throw new TicketDateExpireException("Booking time has expired");
+        }
+        if (tickets.get(0).getIsPaid()) {
+            throw new OrderIsAlreadyPaidException("Order is already paid");
+        }
+        ticketRepository.saveAll(tickets.stream()
+                .peek(el -> el.setIsPaid(true))
                 .toList());
     }
 
