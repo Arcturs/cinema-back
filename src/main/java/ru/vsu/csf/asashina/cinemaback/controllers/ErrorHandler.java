@@ -35,7 +35,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({PosterException.class, TypeMismatchException.class, PasswordDoesNotMatchException.class,
-            WrongInputLoginException.class})
+            WrongInputLoginException.class, ChosenSeatsAreEmptyException.class})
     public ResponseEntity<?> badRequestHandler(Exception e) {
         return ResponseBuilder.build(BAD_REQUEST, new ErrorDTO((e.getMessage())));
     }
@@ -52,17 +52,19 @@ public class ErrorHandler {
                         )));
     }
 
-    @ExceptionHandler({SessionsExistException.class, SessionDateTimeException.class, UserAlreadyExistsException.class})
+    @ExceptionHandler({SessionsExistException.class, SessionDateTimeException.class, UserAlreadyExistsException.class,
+            SeatsAreAlreadyBookedException.class, OrderIsAlreadyPaidException.class})
     public ResponseEntity<?> conflictErrorHandler(BaseException e) {
         return ResponseBuilder.build(CONFLICT, new ErrorDTO(e.getMessage()));
     }
 
-    @ExceptionHandler(MaxScreenNumberException.class)
+    @ExceptionHandler({MaxScreenNumberException.class, SessionHasAlreadyStartedException.class,
+            TicketDateExpireException.class})
     public ResponseEntity<?> methodNotAllowedErrorHandler(BaseException e) {
         return ResponseBuilder.build(METHOD_NOT_ALLOWED, new ErrorDTO(e.getMessage()));
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
+    @ExceptionHandler({TokenExpiredException.class, TicketDoesNotBelongToUserException.class})
     public ResponseEntity<?> forbiddenErrorHandler(BaseException e) {
         return ResponseBuilder.build(FORBIDDEN, new ErrorDTO(e.getMessage()));
     }

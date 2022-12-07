@@ -20,18 +20,13 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    SessionMapper sessionMapper = Mappers.getMapper(SessionMapper.class);
+    TicketMapper ticketMapper = Mappers.getMapper(TicketMapper.class);
 
     UserEntity fromRequestToEntity(SignUpForm signUpForm, String passwordHash, Set<RoleEntity> roles);
 
-    @Mapping(target = "tickets", expression = "java(ticketsMapperDTO(entity.getTickets()))")
+    @Mapping(target = "tickets", expression = "java(ticketMapper.fromEntityToDTOSet(entity.getTickets()))")
     UserDTO fromEntityToDTO(UserEntity entity);
 
-    @Mappings({
-            @Mapping(target = "session", expression = "java(sessionMapper.toDTOFromEntity(entity.getSession()))"),
-            @Mapping(target = "seat", expression = "java(seatMapperDTO(entity.getSeat()))")
-    })
-    Set<TicketDTO> ticketsMapperDTO(Set<TicketEntity> entities);
-
-    SeatDTO seatMapperDTO(SeatEntity entity);
+    @Mapping(target = "tickets", expression = "java(ticketMapper.fromDTOToEntitySet(dto.getTickets()))")
+    UserEntity fromDTOToEntity(UserDTO dto);
 }

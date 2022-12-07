@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.csf.asashina.cinemaback.exceptions.ObjectNotExistsException;
 import ru.vsu.csf.asashina.cinemaback.exceptions.SessionDateTimeException;
+import ru.vsu.csf.asashina.cinemaback.exceptions.SessionHasAlreadyStartedException;
 import ru.vsu.csf.asashina.cinemaback.mappers.SessionMapper;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
@@ -85,6 +86,20 @@ public class SessionService {
     public void deleteSession(Long sessionId) {
         getSessionById(sessionId);
         sessionRepository.deleteById(sessionId);
+    }
+
+    public SessionPageDTO validateIsSessionStarted(Long sessionId) {
+        SessionEntity session = sessionRepository.findById(sessionId).orElseThrow(
+                () -> new ObjectNotExistsException("Session with following id does not exist")
+        );
+        if (session.getStartTime().isBefore(Instant.now(clock))) {
+            throw new SessionHasAlreadyStartedException("Session has already started");
+        }
+        return sessionMapper.toPageDTOFromEntity(session);
+    }
+
+    public SessionEntity fromDTOToEntity(SessionPageDTO sessionPageDTO) {
+        return sessionMapper.fromDTOToEntity(sessionPageDTO);
     }
 
     private int fromDaysToSeconds(Integer days) {

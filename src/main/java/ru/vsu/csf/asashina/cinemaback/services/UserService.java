@@ -74,4 +74,8 @@ public class UserService {
                 () -> new ObjectNotExistsException("User with following id does not exist")
         );
     }
+
+    public UserEntity fromDTOToEntity(UserDTO userDTO) {
+        return userMapper.fromDTOToEntity(userDTO);
+    }
 }

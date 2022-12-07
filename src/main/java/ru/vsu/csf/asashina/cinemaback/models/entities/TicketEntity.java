@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "ticket")
@@ -30,4 +31,15 @@ public class TicketEntity {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "seat_id")
     private SeatEntity seat;
+
+    @Column(nullable = false)
+    private String orderId;
+
+    private Boolean isPaid = false;
+
+    @Column(nullable = false)
+    private Instant transactionStartTimestamp;
+
+    @Column(nullable = false)
+    private Instant transactionEndTimestamp;
 }

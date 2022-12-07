@@ -3,6 +3,8 @@ package ru.vsu.csf.asashina.cinemaback.services;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.csf.asashina.cinemaback.mappers.SeatMapper;
+import ru.vsu.csf.asashina.cinemaback.models.dtos.SeatDTO;
 import ru.vsu.csf.asashina.cinemaback.models.entities.ScreenEntity;
 import ru.vsu.csf.asashina.cinemaback.models.entities.SeatEntity;
 import ru.vsu.csf.asashina.cinemaback.repositories.SeatRepository;
@@ -16,6 +18,8 @@ public class SeatService {
 
     private final SeatRepository seatRepository;
 
+    private final SeatMapper seatMapper;
+
     @Transactional
     public void createSeats(ScreenEntity screen) {
         List<SeatEntity> seats = new ArrayList<>();
@@ -25,5 +29,9 @@ public class SeatService {
             }
         }
         seatRepository.saveAll(seats);
+    }
+
+    public SeatEntity fromDTOToEntity(SeatDTO dto) {
+        return seatMapper.fromDTOToEntity(dto);
     }
 }

@@ -71,7 +71,8 @@ public class TokenService {
         String refreshToken = UUID.randomUUID().toString();
         refreshTokenRepository.save(new RefreshTokenEntity(
                 refreshToken,
-                LocalDateTime.now().plusDays(refreshTokenExpireTime).toInstant(clock.getZone().getRules().getOffset(Instant.now())),
+                LocalDateTime.now().plusDays(refreshTokenExpireTime)
+                        .toInstant(clock.getZone().getRules().getOffset(Instant.now())),
                 userService.findUserEntityById(user.getUserId())));
         return refreshToken;
     }
@@ -96,7 +97,7 @@ public class TokenService {
                 () -> new ObjectNotExistsException("Cannot find refresh token for this user")
         );
         Instant now = Instant.now(clock);
-        if (refreshTokenEntity.getDateExpire().isAfter(now)) {
+        if (refreshTokenEntity.getDateExpire().isBefore(now)) {
             throw new TokenExpiredException("Token has been already expired");
         }
         return userMapper.fromEntityToDTO(refreshTokenEntity.getUser());

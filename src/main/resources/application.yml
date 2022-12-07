@@ -39,3 +39,7 @@ security:
       accessToken: 1 800 000
       # in days
       refreshToken: 30
+
+order:
+  paymentMin: 15
+  bookingTimeRestrictionBeforeFilmStartsMin: 30

@@ -595,6 +595,284 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  # ----------------------------------------------------------------------
+  #                                 order
+  # ----------------------------------------------------------------------
+
+  /order:
+    post:
+      tags:
+        - Order
+      description: Books chosen seats for session
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChosenSeats'
+      responses:
+        200:
+          description: Returns order id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderId'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Session or seats not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        405:
+          description: Session has already started, you cannot book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Seats were already booked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /order/{orderId}:
+    get:
+      tags:
+        - Order
+      description: Shows order's details
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Returns order's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tickets'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Order
+      description: Cancels order
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      responses:
+        204:
+          description: Order was successfully canceled
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /order/{orderId}/book:
+    post:
+      tags:
+        - Order
+      description: Books order
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      responses:
+        204:
+          description: Order was successfuly booked
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        405:
+          description: Session has already started, you cannot book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Order is already paid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /order/{orderId}/pay:
+    post:
+      tags:
+        - Order
+      description: Payment
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+      responses:
+        204:
+          description: Order was successfuly paid
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        405:
+          description: Booking has expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Order is already paid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /order/{orderId}/confirm-booking:
+    post:
+      tags:
+        - Order
+      description: Confirms booking
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+      responses:
+        204:
+          description: Order was successfuly confirmed and paid
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        405:
+          description: Booking has expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Order is already paid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
 # ----------------------------------------------------------------------
 
 components:
@@ -810,6 +1088,14 @@ components:
           $ref: '#/components/schemas/SessionResponse'
         seat:
           $ref: '#/components/schemas/SeatDTO'
+        orderId:
+          type: string
+        isPaid:
+          type: boolean
+        transactionEndTimestamp:
+          type: string
+          format: date-time
+          example: "dd.MM.yyyy HH:mm"
 
     SignUpForm:
       type: object
@@ -859,4 +1145,34 @@ components:
       type: object
       properties:
         message:
+          type: string
+
+    ChosenSeats:
+      type: object
+      properties:
+        sessionId:
+          type: integer
+          format: int64
+          nullable: false
+        seatPlanForSessionIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+
+    OrderId:
+      type: object
+      properties:
+        orderId:
+          type: string
+
+    Tickets:
+      type: array
+      items:
+        $ref: '#/components/schema/Ticket'
+
+    Card:
+      type: object
+      properties:
+        cardNumber:
           type: string

@@ -31,14 +31,16 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers(GET, "/user/**").hasAnyAuthority(USER)
-                .antMatchers(POST, "/user/refresh-token").hasAnyAuthority(USER)
+                .antMatchers(GET, "/user/**", "/order/*").hasAnyAuthority(USER)
+                .antMatchers(POST, "/order", "/order/**").hasAnyAuthority(USER)
+                .antMatchers(DELETE, "/order/*").hasAnyAuthority(USER)
 
                 .antMatchers(GET, "/movie", "/movie/**", "/screen", "/screen/*", "/session",
                         "/session/*").permitAll()
                 .antMatchers(POST, "/user/**").permitAll()
 
-                .antMatchers(POST, "/movie", "/screen", "/session").hasAnyAuthority(ADMIN)
+                .antMatchers(POST, "/movie", "/screen", "/session", "/order/*/confirm-booking")
+                    .hasAnyAuthority(ADMIN)
                 .antMatchers(PUT, "/movie/**", "/session/**").hasAnyAuthority(ADMIN)
                 .antMatchers(DELETE, "/movie/**", "/session/**").hasAnyAuthority(ADMIN)
                 .anyRequest().permitAll();
