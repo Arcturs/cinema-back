@@ -630,6 +630,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        404:
+          description: Session or seats not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         405:
           description: Session has already started, you cannot book
           content:
@@ -638,6 +644,45 @@ paths:
                 $ref: '#/components/schemas/Error'
         409:
           description: Seats were already booked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /order/{orderId}:
+    get:
+      tags:
+        - Order
+      description: Shows order's details
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Returns order's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tickets'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Tickets with following order id do not exist
           content:
             application/json:
               schema:
@@ -859,6 +904,14 @@ components:
           $ref: '#/components/schemas/SessionResponse'
         seat:
           $ref: '#/components/schemas/SeatDTO'
+        orderId:
+          type: string
+        isPaid:
+          type: boolean
+        transactionEndTimestamp:
+          type: string
+          format: date-time
+          example: "dd.MM.yyyy HH:mm"
 
     SignUpForm:
       type: object
@@ -928,3 +981,8 @@ components:
       properties:
         orderId:
           type: string
+
+    Tickets:
+      type: array
+      items:
+        $ref: '#/components/schema/Ticket'

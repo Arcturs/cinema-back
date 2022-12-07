@@ -46,7 +46,7 @@
         <sqlFile path="init/create-order_number-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="9.1-Drop-unique-order_id" author="Anastasiia Sashina">
+    <changeSet id="9.3-Drop-unique-order_id" author="Anastasiia Sashina">
         <sqlFile path="alter/drop-constraint-ticket.sql" relativeToChangelogFile="true"/>
     </changeSet>
 

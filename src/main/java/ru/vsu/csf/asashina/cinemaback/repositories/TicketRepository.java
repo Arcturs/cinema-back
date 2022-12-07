@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.vsu.csf.asashina.cinemaback.models.entities.TicketEntity;
 
+import java.util.List;
+
 @Repository
 public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
 
@@ -16,4 +18,6 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     @Modifying
     @Query(value = "UPDATE order_number SET order_count = order_count + :incr", nativeQuery = true)
     void updateOrderNumber(@Param("incr") int increment);
+
+    List<TicketEntity> findByOrderId(String orderId);
 }

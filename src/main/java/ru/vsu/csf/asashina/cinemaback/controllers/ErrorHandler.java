@@ -63,7 +63,7 @@ public class ErrorHandler {
         return ResponseBuilder.build(METHOD_NOT_ALLOWED, new ErrorDTO(e.getMessage()));
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
+    @ExceptionHandler({TokenExpiredException.class, TicketDoesNotBelongToUserException.class})
     public ResponseEntity<?> forbiddenErrorHandler(BaseException e) {
         return ResponseBuilder.build(FORBIDDEN, new ErrorDTO(e.getMessage()));
     }

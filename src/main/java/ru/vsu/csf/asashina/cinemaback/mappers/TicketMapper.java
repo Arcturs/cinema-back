@@ -11,6 +11,7 @@ import ru.vsu.csf.asashina.cinemaback.models.entities.TicketEntity;
 import ru.vsu.csf.asashina.cinemaback.models.entities.UserEntity;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 @Mapper
@@ -35,4 +36,10 @@ public interface TicketMapper {
 
     TicketEntity toEntity(UserEntity user, SessionEntity session, SeatEntity seat, String orderId, Boolean isPaid,
                           Instant transactionStartTimestamp, Instant transactionEndTimestamp);
+
+    @Mappings({
+            @Mapping(target = "session", expression = "java(sessionMapper.toPageDTOFromEntity(entity.getSession()))"),
+            @Mapping(target = "seat", expression = "java(seatMapper.fromEntityToDTO(entity.getSeat()))")
+    })
+    List<TicketDTO> fromEntityToDTOList(List<TicketEntity> entities);
 }

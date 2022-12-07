@@ -2,10 +2,14 @@ package ru.vsu.csf.asashina.cinemaback.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.csf.asashina.cinemaback.exceptions.ObjectNotExistsException;
+import ru.vsu.csf.asashina.cinemaback.exceptions.TicketDoesNotBelongToUserException;
 import ru.vsu.csf.asashina.cinemaback.mappers.TicketMapper;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.SeatPlanDTO;
+import ru.vsu.csf.asashina.cinemaback.models.dtos.TicketDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.UserDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
 import ru.vsu.csf.asashina.cinemaback.models.entities.SessionEntity;
@@ -53,6 +57,17 @@ public class TicketService {
         LocalDateTime start = LocalDateTime.ofInstant(startTransactionTime,
                 clock.getZone().getRules().getOffset(Instant.now(clock)));
         return String.format(ORDER_ID_FORMAT, start.getYear(), start.getMonthValue(), start.getDayOfMonth(), code);
+    }
+
+    public List<TicketDTO> getTicketDetails(String orderId, Authentication authentication) {
+        List<TicketEntity> tickets = ticketRepository.findByOrderId(orderId);
+        if (tickets.isEmpty()) {
+            throw new ObjectNotExistsException("Ticket with following order id does not exist");
+        }
+        if (!tickets.get(0).getUser().getEmail().equals(authentication.getPrincipal())) {
+            throw new TicketDoesNotBelongToUserException("This ticket does not belong to current user");
+        }
+        return ticketMapper.fromEntityToDTOList(tickets);
     }
 
     private List<TicketEntity> createTickets(List<SeatPlanDTO> seatPlan, SessionEntity session, UserEntity user,

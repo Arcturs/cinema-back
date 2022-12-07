@@ -31,7 +31,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers(GET, "/user/**").hasAnyAuthority(USER)
+                .antMatchers(GET, "/user/**", "/order/*").hasAnyAuthority(USER)
                 .antMatchers(POST, "/user/refresh-token", "/order").hasAnyAuthority(USER)
 
                 .antMatchers(GET, "/movie", "/movie/**", "/screen", "/screen/*", "/session",
