@@ -2,10 +2,7 @@ package ru.vsu.csf.asashina.cinemaback.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.vsu.csf.asashina.cinemaback.mappers.MovieMapper;
-import ru.vsu.csf.asashina.cinemaback.mappers.ScreenMapper;
-import ru.vsu.csf.asashina.cinemaback.mappers.SessionMapper;
-import ru.vsu.csf.asashina.cinemaback.mappers.UserMapper;
+import ru.vsu.csf.asashina.cinemaback.mappers.*;
 
 @Configuration
 public class MapStructConfiguration {
@@ -28,5 +25,20 @@ public class MapStructConfiguration {
     @Bean
     public UserMapper userMapper() {
         return UserMapper.INSTANCE;
+    }
+
+    @Bean
+    public SeatPlanMapper seatPlanMapper() {
+        return SeatPlanMapper.INSTANCE;
+    }
+
+    @Bean
+    public SeatMapper seatMapper() {
+        return SeatMapper.INSTANCE;
+    }
+
+    @Bean
+    public TicketMapper ticketMapper() {
+        return TicketMapper.INSTANCE;
     }
 }

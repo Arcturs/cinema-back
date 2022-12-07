@@ -20,12 +20,15 @@ public interface ScreenMapper {
 
     ScreenMapper INSTANCE = Mappers.getMapper(ScreenMapper.class);
 
+    SeatMapper seatMapper = Mappers.getMapper(SeatMapper.class);
+
     ScreenPageDTO toPageDTOFromEntity(ScreenEntity entity);
 
-    @Mapping(target = "seatsSet", expression = "java(seatDTOMapping(entity.getSeatsSet()))")
+    @Mapping(target = "seatsSet", expression = "java(seatMapper.fromEntityToDTOSet(entity.getSeatsSet()))")
     ScreenDTO toDTOFromEntity(ScreenEntity entity);
 
-    Set<SeatDTO> seatDTOMapping(Set<SeatEntity> set);
-
     ScreenEntity fromRequestToEntity(ScreenRequest request, Integer screenNumber);
+
+    @Mapping(target = "seatsSet", expression = "java(seatMapper.fromDTOToEntitySet(dto.getSeatsSet()))")
+    ScreenEntity fromDTOToEntity(ScreenDTO dto);
 }

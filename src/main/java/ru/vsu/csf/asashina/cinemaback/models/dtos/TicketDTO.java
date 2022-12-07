@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionDTO;
+import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
 
 import java.time.Instant;
 
@@ -16,7 +16,7 @@ import java.time.Instant;
 public class TicketDTO {
 
     private Long ticketId;
-    private SessionDTO session;
+    private SessionPageDTO session;
     private SeatDTO seat;
     private String orderId;
     private Boolean isPaid = false;

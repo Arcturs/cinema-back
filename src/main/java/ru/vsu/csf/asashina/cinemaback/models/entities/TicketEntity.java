@@ -32,7 +32,7 @@ public class TicketEntity {
     @JoinColumn(name = "seat_id")
     private SeatEntity seat;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String orderId;
 
     private Boolean isPaid = false;

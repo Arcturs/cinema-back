@@ -5,17 +5,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-import ru.vsu.csf.asashina.cinemaback.models.dtos.SeatDTO;
-import ru.vsu.csf.asashina.cinemaback.models.dtos.SeatPlanDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionDTO;
 import ru.vsu.csf.asashina.cinemaback.models.dtos.session.SessionPageDTO;
-import ru.vsu.csf.asashina.cinemaback.models.dtos.movie.MovieDTO;
-import ru.vsu.csf.asashina.cinemaback.models.dtos.screen.ScreenDTO;
 import ru.vsu.csf.asashina.cinemaback.models.entities.*;
 import ru.vsu.csf.asashina.cinemaback.models.request.SessionRequest;
 
 import java.time.Instant;
-import java.util.Set;
 
 @Mapper
 public interface SessionMapper {
@@ -24,6 +19,7 @@ public interface SessionMapper {
 
     MovieMapper movieMapper = Mappers.getMapper(MovieMapper.class);
     ScreenMapper screenMapper = Mappers.getMapper(ScreenMapper.class);
+    SeatPlanMapper seatPlanMapper = Mappers.getMapper(SeatPlanMapper.class);
 
     @Mappings({
             @Mapping(target = "movie", expression = "java(movieMapper.toDTOFromEntity(entity.getMovie()))"),
@@ -34,7 +30,7 @@ public interface SessionMapper {
     @Mappings({
             @Mapping(target = "movie", expression = "java(movieMapper.toDTOFromEntity(entity.getMovie()))"),
             @Mapping(target = "screen", expression = "java(screenMapper.toDTOFromEntity(entity.getScreen()))"),
-            @Mapping(target = "seatPlan", expression = "java(seatPlanMapper(entity.getSeatPlan()))")
+            @Mapping(target = "seatPlan", expression = "java(seatPlanMapper.fromEntityToDTOSet(entity.getSeatPlan()))")
     })
     SessionDTO toDTOFromEntity(SessionEntity entity);
 
@@ -46,14 +42,15 @@ public interface SessionMapper {
                                       ScreenEntity screen);
 
     @Mappings({
+            @Mapping(target = "movie", expression = "java(movieMapper.toEntityFromDTO(sessionPageDTO.getMovie()))"),
+            @Mapping(target = "screen", expression = "java(screenMapper.fromDTOToEntity(sessionPageDTO.getScreen()))")
+    })
+    SessionEntity fromDTOToEntity(SessionPageDTO sessionPageDTO);
+
+    @Mappings({
             @Mapping(target = "startTime", source = "start"),
             @Mapping(target = "endTime", source = "end")
     })
     void updateSessionEntity(@MappingTarget SessionEntity entity, SessionRequest request, Instant start, Instant end,
                              MovieEntity movie, ScreenEntity screen);
-
-    SeatDTO seatMapper(SeatEntity entity);
-
-    @Mapping(target = "seat", expression = "java(seatMapperDTO(entity.getSeat()))")
-    Set<SeatPlanDTO> seatPlanMapper(Set<SeatPlanEntity> entity);
 }

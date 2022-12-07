@@ -19,5 +19,7 @@ public interface MovieMapper {
 
     MovieEntity toEntityFromRequest(MovieRequest request);
 
+    MovieEntity toEntityFromDTO(MovieDTO dto);
+
     void updateMovie(MovieRequest request, @MappingTarget MovieEntity entity);
 }

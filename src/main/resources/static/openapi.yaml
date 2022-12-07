@@ -595,6 +595,55 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  # ----------------------------------------------------------------------
+  #                                 order
+  # ----------------------------------------------------------------------
+
+  /order:
+    post:
+      tags:
+        - Order
+      description: Books chosen seats for session
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChosenSeats'
+      responses:
+        200:
+          description: Returns order id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderId'
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        405:
+          description: Session has already started, you cannot book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Seats were already booked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
 # ----------------------------------------------------------------------
 
 components:
@@ -859,4 +908,23 @@ components:
       type: object
       properties:
         message:
+          type: string
+
+    ChosenSeats:
+      type: object
+      properties:
+        sessionId:
+          type: integer
+          format: int64
+          nullable: false
+        seatPlanForSessionIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+
+    OrderId:
+      type: object
+      properties:
+        orderId:
           type: string
