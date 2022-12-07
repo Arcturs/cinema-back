@@ -59,4 +59,12 @@ public class OrderController {
         ticketService.buyTickets(orderId, authentication);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{orderId}/confirm-booking")
+    public ResponseEntity<?> confirmBooking(@PathVariable("orderId") String orderId,
+                                            @RequestBody @Valid CardNumberRequest request,
+                                            Authentication authentication) {
+        ticketService.buyTickets(orderId, authentication);
+        return ResponseEntity.noContent().build();
+    }
 }

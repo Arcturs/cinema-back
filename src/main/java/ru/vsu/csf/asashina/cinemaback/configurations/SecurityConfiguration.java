@@ -39,7 +39,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                         "/session/*").permitAll()
                 .antMatchers(POST, "/user/**").permitAll()
 
-                .antMatchers(POST, "/movie", "/screen", "/session").hasAnyAuthority(ADMIN)
+                .antMatchers(POST, "/movie", "/screen", "/session", "/order/*/confirm-booking")
+                    .hasAnyAuthority(ADMIN)
                 .antMatchers(PUT, "/movie/**", "/session/**").hasAnyAuthority(ADMIN)
                 .antMatchers(DELETE, "/movie/**", "/session/**").hasAnyAuthority(ADMIN)
                 .anyRequest().permitAll();
