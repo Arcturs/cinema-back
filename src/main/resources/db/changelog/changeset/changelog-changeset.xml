@@ -40,4 +40,10 @@
         <sqlFile path="init/create-user_refresh_token-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="8-Alter-ticket-table" author="Anastasiia Sashina">
+        <sqlFile path="alter/add-order_id-field.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="alter/alter-ticket-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="init/create-order_number-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
