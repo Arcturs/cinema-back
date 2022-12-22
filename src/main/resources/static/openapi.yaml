@@ -668,7 +668,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tickets'
+                $ref: '#/components/schemas/Ticket'
         400:
           description: Invalid input
           content:
